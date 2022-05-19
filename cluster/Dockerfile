@@ -15,6 +15,11 @@ COPY project/ .
 
 # Normal build command
 RUN mpicc -o mpi_hello_world mpi_hello_world.c
+RUN mpicc -o circle circle.c
+RUN mpicc -o ping ping.c
+RUN mpicc -o mpireduce mpireduce.c
+RUN mpicc -o sendrec sendrec.c
+RUN mpicc -o bingo bingo.c
 
 # ####################
 # For Docker beginner:

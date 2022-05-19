@@ -156,17 +156,14 @@ up_workers ()
 {
     printf "\\n\\n===> SPIN UP WORKER NODES"
     printf "\\n%s\\n" "$HEADER"
+    NUM_WORKER=$((SIZE - 1))
     echo "$ docker-compose up -d worker"
     printf "\\n"
-    docker-compose up -d worker 
+    docker-compose up -d worker --scale worker=${NUM_WORKER}
 
     printf "\\n"
     printf "\\n%s\\n" "$HEADER"
 
-    NUM_WORKER=$((SIZE - 1))
-    echo "$ docker-compose scale worker=$NUM_WORKER"
-    printf "\\n"
-    docker-compose scale worker=${NUM_WORKER}
 }
 
 down_master ()

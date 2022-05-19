@@ -32,7 +32,7 @@ PROJECT_NAME="mpi"
 NETWORK_NAME="mpi-network"
 NETWORK_SUBNET="10.0.9.0/24"
 SSH_PORT="2222"
-
+MY_IMAGE_TAG="bfinger1997/mpitest"
 # Include config variables if the file exists
 # shellcheck disable=SC1091
 if [ -f ./swarm.conf ]; then
@@ -301,7 +301,7 @@ build_and_push_image ()
     printf "\\n%s\\n" "$HEADER"
     echo "$ docker push \"$IMAGE_TAG\""
     printf "\\n"
-    docker push "$IMAGE_TAG"
+    docker push "$MY_IMAGE_TAG"
 }
 
 
