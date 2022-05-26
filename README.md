@@ -101,4 +101,82 @@ Suggestions and pull requests are awesome.
 
 # License MIT
 Copyright © Nikyle Nguyen
-# okey
+# okey, tutorial dla studentów PRZ
+
+INSTRUKCJA INSTALACJI NA WINDOWS 10
+1. Uruchom powershell z uprawnieniami administratora
+2. Uruchom poniższe instrukcje
+wsl --install
+
+Lub, gdy istnieje wsl1
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform
+wsl --set-default-version 2
+
+Zainstaluj wybraną dystrybucję linuxa np. debian.
+W wybranej dystrybucji utwórz konto użytkownika a następnie wykonaj:
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install git
+Wyłącz debiana/ubuntu/whatever.
+
+ZAINSTALUJ DOCKER
+Po instalacji wejdź w opcje i zaznacz w general "Use Docker Compose V2" jeśli jest odznaczone
+Wejdź w opcjach w resources-> wsl integration i włącz integrację WSL oraz zaznacz zainstalowaną dystybucję.
+
+UWAGA
+jeśli posiadasz już docker, należy przekształcić go do wsl2. Wyłącz dockera a następnie wpisz poniższe instrukcje.
+wsl --shutdown
+wsl --unregister docker-desktop
+wsl --unregister docker-desktop-data
+
+Włącz docker.
+Włącz wybraną dysrtybucję linuxa.
+W wybranym miejscu pobierz projekt:
+git clone https://github.com/B-Paluch/okey.git
+W WSL wklejasz za pomocą prawego klawisza myszy.
+
+
+Jak działa:
+wejdź w katalog cluster. Zawarty tam jest plik ./cluster.sh
+Wykonując komendę ./cluster.sh size=10
+zostanie uruchomiony klaster z 10 procesami pracującymi.
+Wpisz ./cluster.sh aby zapoznać się z komendami
+Połączysz się z klastrem przez ./cluster.sh login
+
+
+UWAGA niektóre dystrystrybucję wymagają zmiany chmod dla folderu i uruchamiania pozostałych poleceń z konta administratora(sudo komenda).
+Komenda chmod:
+sudo chmod 777 cluster -R
+
+Po zalogowaniu wydaj polecenie ls i odpal dowolny program dla przykładu
+mpirun ./mpi_hello_world
+Przerwiesz działanie programu przy pomocy ctrl+c
+odłączysz się od klastra przy pomocy polecenia exit
+
+
+JAK PISAĆ PROGRAMY
+Pod wybraną dystrybucją utwórz kod programu który chcesz napisać.
+Możliwe jest w eksploratorze windows(klawisz windows+e) wpisanie w ścieżkę:
+\\wsl$
+i przeglądanie zawartości linuxa.
+Wejdź w ścieżkę gdzie zawarte są programy, na przykład:
+\\wsl.localhost\Debian\home\bartek\alpine-mpich\cluster\project
+nazwa bartek\alpine-mpich ma być nazwą twojego użytkownika oraz projektu
+W tym miejscu dodaj pliki napisane w C.
+Po wykonaniu tego, wejdź katalog niżej
+\\wsl.localhost\Debian\home\bartek\alpine-mpich\cluster\
+I w pliku Dockerfile(otwórz na przykład notatnikiem) dopisz po poniższej linijce:
+RUN mpicc -o bingo bingo.c
+
+linijkę:
+RUN mpicc -o nazwaprogramu nazwaprogramu.c
+Po dodaniu tego wykonaj przebudowę obrazu na dystrybucji linuxa za pomocą ./cluster.sh up size=10
+gdzie size to parametr który samemu dobieramy, zależnie od tego ile chcemy mieć workerów w klastrze.
+
+Po połączeniu się z klastrem - ./cluster.sh login
+wykonaj polecenie mpirun ./nazwaprogramu
+Jeżeli program został napisany poprawnie, zostanie on wykonany zgodnie z zaleceniami.
+
+Przy każdej zmianie w programie należy przebudować ponownie obraz przez ./cluster.sh up...
+Aby dodać kolejne pliki powtórz w pliku Dockerfile linijkę RUN mpicc -o...
